@@ -98,7 +98,7 @@ if __name__ == '__main__':
         print ('[*] Parsing "%s" course\'s chapters' % course_name)
         print ('[*] [%d chapters found]' % len(chapters))
         for chapter in chapters:
-            chapter_name = re.sub(invalid_file_chars, " ", chapter['title'])
+            chapter_name = re.sub(invalid_file_chars, " ", chapter['title']).strip().encode('utf-8')
             videos = chapter['videos']
             vc = 0
             
@@ -117,6 +117,10 @@ if __name__ == '__main__':
                 except:
                     print ('[!] ------ Can\'t download the video "%s", probably is only for premium users' % video_name)
                 else:
-                    print ('[*] ------ Downloading video "%s"' % video_name)
-                    download_file(download_url, 'out/%s/%s' % (course_name, chapter_name), '%s. %s.mp4' %
+                    new_path = 'out/%s/%s/%s. %s.mp4' % (course_name, chapter_name, str(vc), video_name)
+                    if os.path.exists(new_path):
+                       print ('[*] ------ file "%s" exists' % video_name)
+                    else:
+                       print ('[*] ------ Downloading video "%s"' % video_name)
+                       download_file(download_url, 'out/%s/%s' % (course_name, chapter_name), '%s. %s.mp4' %
                                   (str(vc), video_name))
